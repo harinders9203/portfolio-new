@@ -329,3 +329,22 @@ progress::-moz-progress-bar {
 .ppt h1:hover{
     color:#55198b;
 }
+
+
+.reach-out{
+    /* display: flex;
+    flex-direction: column; */
+    text-align: center;
+    width: 90%;
+    justify-self: center;
+    align-items: center;
+    height: fit-content;
+}
+
+.icons-reach{
+    font-size: 30px;
+}
+
+.reach-right img{
+    align-self: center;
+}
