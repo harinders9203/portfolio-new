@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="100%" height="100%">
+  <defs>
+    <linearGradient id="psebGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#55198b"/>
+      <stop offset="100%" stop-color="#3b82f6"/>
+    </linearGradient>
+  </defs>
+  <circle cx="80" cy="80" r="70" fill="#f5f3ff" stroke="#55198b" stroke-width="3"/>
+  <!-- Graduation cap & book -->
+  <polygon points="80,45 125,65 80,85 35,65" fill="url(#psebGrad)"/>
+  <rect x="76" y="85" width="8" height="15" fill="#55198b"/>
+  <path d="M 125,65 L 125,95" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round"/>
+  <circle cx="125" cy="98" r="3" fill="#f59e0b"/>
+  <!-- Open Book -->
+  <path d="M 50,115 C 65,108 78,112 80,118 C 82,112 95,108 110,115 L 110,128 C 95,121 82,125 80,130 C 78,125 65,121 50,128 Z" fill="#55198b"/>
+  <text x="80" y="103" text-anchor="middle" fill="#55198b" font-size="11" font-family="sans-serif" font-weight="bold">PSEB</text>
+</svg>
