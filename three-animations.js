@@ -11,6 +11,77 @@
         return;
     }
 
+    var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    // Keep each scene idle when it is off screen or the browser tab is hidden.
+    function createAnimationLoop(section, drawFrame) {
+        var isVisible = false;
+        var animationFrame = 0;
+
+        function stop() {
+            if (animationFrame) {
+                cancelAnimationFrame(animationFrame);
+                animationFrame = 0;
+            }
+        }
+
+        function draw() {
+            animationFrame = 0;
+            if (!isVisible || document.hidden) return;
+
+            drawFrame();
+            if (!reducedMotion.matches) {
+                animationFrame = requestAnimationFrame(draw);
+            }
+        }
+
+        function start() {
+            if (!animationFrame && isVisible && !document.hidden) {
+                animationFrame = requestAnimationFrame(draw);
+            }
+        }
+
+        var observer = new IntersectionObserver(function (entries) {
+            isVisible = entries[0].isIntersecting;
+            if (isVisible) start();
+            else stop();
+        }, { threshold: 0.05 });
+        observer.observe(section);
+
+        document.addEventListener('visibilitychange', function () {
+            if (document.hidden) stop();
+            else start();
+        });
+
+        var onMotionPreferenceChange = function () {
+            if (reducedMotion.matches) {
+                stop();
+                draw(); // Render one still frame for reduced-motion preferences.
+            } else {
+                start();
+            }
+        };
+        if (reducedMotion.addEventListener) {
+            reducedMotion.addEventListener('change', onMotionPreferenceChange);
+        } else if (reducedMotion.addListener) {
+            reducedMotion.addListener(onMotionPreferenceChange);
+        }
+    }
+
+    function createRenderer(canvas) {
+        canvas.setAttribute('aria-hidden', 'true');
+        try {
+            var renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+            renderer.setClearColor(0x000000, 0);
+            return renderer;
+        } catch (error) {
+            console.warn('WebGL is unavailable; skipping a Three.js scene.', error);
+            canvas.remove();
+            return null;
+        }
+    }
+
     // ================================================================
     // 1. HERO — Interactive Particle Network with Connections
     // ================================================================
@@ -25,9 +96,8 @@
         heroBg.appendChild(canvas);
 
         // Renderer
-        const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        renderer.setClearColor(0x000000, 0);
+        const renderer = createRenderer(canvas);
+        if (!renderer) return;
 
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
@@ -125,11 +195,10 @@
         });
         heroSection.addEventListener('mouseleave', function () { mouse.active = false; });
 
-        // --- Animation loop ---
+        // --- Animation frame ---
         var frame = 0;
 
-        function animate() {
-            requestAnimationFrame(animate);
+        function drawFrame() {
             frame++;
 
             var p = pGeo.attributes.position.array;
@@ -234,8 +303,7 @@
         }
         resize();
         window.addEventListener('resize', resize);
-
-        animate();
+        createAnimationLoop(heroSection, drawFrame);
     }
 
     // ================================================================
@@ -249,9 +317,8 @@
         canvas.id = 'skillsCanvas';
         section.insertBefore(canvas, section.firstChild);
 
-        var renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        renderer.setClearColor(0x000000, 0);
+        var renderer = createRenderer(canvas);
+        if (!renderer) return;
 
         var scene = new THREE.Scene();
         var camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
@@ -305,17 +372,8 @@
         scene.add(core);
 
         var frame = 0;
-        var isVisible = false;
 
-        var observer = new IntersectionObserver(function (entries) {
-            isVisible = entries[0].isIntersecting;
-        }, { threshold: 0.05 });
-        observer.observe(section);
-
-        function animate() {
-            requestAnimationFrame(animate);
-            if (!isVisible) return;
-
+        function drawFrame() {
             frame++;
 
             // Outer rotates forward
@@ -354,8 +412,7 @@
         }
         resize();
         window.addEventListener('resize', resize);
-
-        animate();
+        createAnimationLoop(section, drawFrame);
     }
 
     // ================================================================
@@ -369,9 +426,8 @@
         canvas.id = 'contactCanvas';
         section.insertBefore(canvas, section.firstChild);
 
-        var renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        renderer.setClearColor(0x000000, 0);
+        var renderer = createRenderer(canvas);
+        if (!renderer) return;
 
         var scene = new THREE.Scene();
         var camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
@@ -412,17 +468,8 @@
         scene.add(ring);
 
         var frame = 0;
-        var isVisible = false;
 
-        var observer = new IntersectionObserver(function (entries) {
-            isVisible = entries[0].isIntersecting;
-        }, { threshold: 0.05 });
-        observer.observe(section);
-
-        function animate() {
-            requestAnimationFrame(animate);
-            if (!isVisible) return;
-
+        function drawFrame() {
             frame++;
 
             knot.rotation.x += 0.002;
@@ -444,8 +491,7 @@
         }
         resize();
         window.addEventListener('resize', resize);
-
-        animate();
+        createAnimationLoop(section, drawFrame);
     }
 
     // ================================================================

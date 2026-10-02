@@ -593,6 +593,12 @@ img {
     overflow: hidden;
 }
 
+#skills > .container,
+#contact > .container {
+    position: relative;
+    z-index: 1;
+}
+
 /* ===== SECTION STYLES ===== */
 .section {
     padding: var(--section-padding);
