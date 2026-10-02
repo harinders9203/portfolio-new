@@ -16,6 +16,9 @@
 </head>
 
 <body>
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress-bar" id="scrollProgressBar"></div>
+
     <!-- Scan Lines Overlay -->
     <div class="scanlines"></div>
 
@@ -54,47 +57,71 @@
             <div class="hero-glow hero-glow-2"></div>
             <div class="hero-glow hero-glow-3"></div>
         </div>
-        <div class="hero-content">
-            <div class="hero-badge">
-                <span class="status-dot"></span>
-                Available for Hire
-            </div>
-            <p class="hero-greeting">// Hello World, I'm</p>
-            <h1 class="hero-name glitch" data-text="Harinder Singh">Harinder Singh</h1>
-            <div class="hero-title-wrapper">
-                <span class="hero-title-prefix">&gt;&nbsp;</span>
-                <span class="hero-title" id="typedText"></span>
-                <span class="typed-cursor">|</span>
-            </div>
-            <p class="hero-desc">
-                Bridging <span class="text-red">Red Team</span> offense and <span class="text-blue">Blue Team</span> defense into
-                <span class="text-purple">Purple Team</span> excellence.<br>I break systems to make them unbreakable.
-            </p>
-            <div class="hero-stats">
-                <div class="stat">
-                    <span class="stat-number" data-count="5">0</span><span class="stat-plus">+</span>
-                    <span class="stat-label">Projects</span>
+        <div class="hero-wrapper">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <span class="status-dot"></span>
+                    Available for Hire
                 </div>
-                <div class="stat-divider"></div>
-                <div class="stat">
-                    <span class="stat-number" data-count="3">0</span><span class="stat-plus">+</span>
-                    <span class="stat-label">Roles</span>
+                <p class="hero-greeting">// Hello World, I'm</p>
+                <h1 class="hero-name glitch" data-text="Harinder Singh">Harinder Singh</h1>
+                <div class="hero-title-wrapper">
+                    <span class="hero-title-prefix">&gt;&nbsp;</span>
+                    <span class="hero-title" id="typedText"></span>
+                    <span class="typed-cursor">|</span>
                 </div>
-                <div class="stat-divider"></div>
-                <div class="stat">
-                    <span class="stat-number" data-count="1">0</span><span class="stat-plus">+</span>
-                    <span class="stat-label">Years Exp</span>
+                <p class="hero-desc">
+                    Bridging <span class="text-red">Red Team</span> offense and <span class="text-blue">Blue Team</span> defense into
+                    <span class="text-purple">Purple Team</span> excellence.<br>I break systems to make them unbreakable.
+                </p>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <span class="stat-number" data-count="5">0</span><span class="stat-plus">+</span>
+                        <span class="stat-label">Projects</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat">
+                        <span class="stat-number" data-count="3">0</span><span class="stat-plus">+</span>
+                        <span class="stat-label">Roles</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat">
+                        <span class="stat-number" data-count="1">0</span><span class="stat-plus">+</span>
+                        <span class="stat-label">Years Exp</span>
+                    </div>
+                </div>
+                <div class="hero-buttons">
+                    <a href="#contact" class="btn btn-primary"><i class="fa-solid fa-terminal"></i> Let's Talk</a>
+                    <a href="images/pdf/final-resume.pdf" target="_blank" class="btn btn-outline"><i class="fa-solid fa-file-arrow-down"></i> Resume</a>
+                </div>
+                <div class="hero-socials">
+                    <a href="https://github.com/harinders9203" target="_blank" title="GitHub"><i class="fa-brands fa-github"></i></a>
+                    <a href="https://www.linkedin.com/in/harinder-singh-98aa47213" target="_blank" title="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+                    <a href="mailto:singhharinder662@gmail.com" title="Email"><i class="fa-solid fa-at"></i></a>
+                    <a href="https://api.whatsapp.com/send/?phone=%2B918360429812&text=Hello+Harinder" target="_blank" title="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
                 </div>
             </div>
-            <div class="hero-buttons">
-                <a href="#contact" class="btn btn-primary"><i class="fa-solid fa-terminal"></i> Let's Talk</a>
-                <a href="images/pdf/final-resume.pdf" target="_blank" class="btn btn-outline"><i class="fa-solid fa-file-arrow-down"></i> Resume</a>
-            </div>
-            <div class="hero-socials">
-                <a href="https://github.com/harinders9203" target="_blank" title="GitHub"><i class="fa-brands fa-github"></i></a>
-                <a href="https://www.linkedin.com/in/harinder-singh-98aa47213" target="_blank" title="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
-                <a href="mailto:singhharinder662@gmail.com" title="Email"><i class="fa-solid fa-at"></i></a>
-                <a href="https://api.whatsapp.com/send/?phone=%2B918360429812&text=Hello+Harinder" target="_blank" title="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+
+            <!-- 3D Interactive Cyber Core Hologram -->
+            <div class="hero-3d-panel" id="hero3dPanel">
+                <div class="core-hud-header">
+                    <div class="hud-status">
+                        <span class="hud-indicator"></span>
+                        <span class="hud-title">3D SEC-CORE // LIVE</span>
+                    </div>
+                    <span class="hud-telemetry" id="coreTelemetry">ROT [0°, 0°]</span>
+                </div>
+                <div class="hero-3d-canvas-wrap" id="hero3dCanvasContainer">
+                    <!-- Three.js Canvas dynamically inserted here -->
+                </div>
+                <div class="core-hud-controls">
+                    <button class="core-btn active" data-mode="violet"><i class="fa-solid fa-circle-nodes"></i> VIOLET</button>
+                    <button class="core-btn" data-mode="red"><i class="fa-solid fa-crosshairs text-red"></i> RED TEAM</button>
+                    <button class="core-btn" data-mode="blue"><i class="fa-solid fa-shield-halved text-blue"></i> BLUE TEAM</button>
+                </div>
+                <div class="core-hint">
+                    <i class="fa-solid fa-arrows-up-down-left-right"></i> Drag 360° to inspect cyber defense core
+                </div>
             </div>
         </div>
         <div class="scroll-indicator">
@@ -112,7 +139,7 @@
                 <div class="section-line"></div>
             </div>
             <div class="about-grid">
-                <div class="about-image-side">
+                <div class="about-image-side animate-on-scroll slide-left">
                     <div class="image-frame">
                         <img src="images/myimg.png" alt="Harinder Singh">
                         <div class="image-border-glow"></div>
@@ -123,7 +150,7 @@
                         <span><i class="fa-solid fa-phone"></i> +91-8360429812</span>
                     </div>
                 </div>
-                <div class="about-terminal">
+                <div class="about-terminal animate-on-scroll slide-right">
                     <div class="terminal-header">
                         <div class="terminal-dots">
                             <span class="dot dot-red"></span>
@@ -154,7 +181,7 @@
     <!-- ====== SKILLS SECTION ====== -->
     <section id="skills" class="section">
         <div class="container">
-            <div class="section-header">
+            <div class="section-header animate-on-scroll">
                 <span class="section-tag">&lt;skills&gt;</span>
                 <h2 class="section-title">Arsenal &amp; Skills</h2>
                 <div class="section-line"></div>
@@ -162,7 +189,7 @@
 
             <!-- Team Cards -->
             <div class="team-cards">
-                <div class="team-card red-team">
+                <div class="team-card red-team animate-on-scroll">
                     <div class="team-card-glow"></div>
                     <div class="team-card-icon"><i class="fa-solid fa-crosshairs"></i></div>
                     <h3>Red Team</h3>
@@ -175,7 +202,7 @@
                         <li>Vulnerability Assessment</li>
                     </ul>
                 </div>
-                <div class="team-card blue-team">
+                <div class="team-card blue-team animate-on-scroll">
                     <div class="team-card-glow"></div>
                     <div class="team-card-icon"><i class="fa-solid fa-shield-halved"></i></div>
                     <h3>Blue Team</h3>
@@ -188,7 +215,7 @@
                         <li>System Hardening</li>
                     </ul>
                 </div>
-                <div class="team-card purple-team">
+                <div class="team-card purple-team animate-on-scroll">
                     <div class="team-card-glow"></div>
                     <div class="team-card-icon"><i class="fa-solid fa-shield-virus"></i></div>
                     <h3>Purple Team</h3>
@@ -204,7 +231,7 @@
             </div>
 
             <!-- Skill Bars -->
-            <div class="skill-bars-container">
+            <div class="skill-bars-container animate-on-scroll">
                 <div class="skill-bar-item">
                     <div class="skill-bar-header">
                         <span>Cybersecurity &amp; Malware Analysis</span>
@@ -245,7 +272,7 @@
 
             <!-- Tools Grid -->
             <h3 class="tools-heading">Tools &amp; Technologies</h3>
-            <div class="tools-grid">
+            <div class="tools-grid animate-on-scroll">
                 <div class="tool-item"><i class="fa-solid fa-bug"></i><span>Burp Suite</span></div>
                 <div class="tool-item"><i class="fa-solid fa-network-wired"></i><span>Wireshark</span></div>
                 <div class="tool-item"><i class="fa-solid fa-skull-crossbones"></i><span>Metasploit</span></div>
@@ -456,13 +483,13 @@
     <!-- ====== CONTACT SECTION ====== -->
     <section id="contact" class="section">
         <div class="container">
-            <div class="section-header">
+            <div class="section-header animate-on-scroll">
                 <span class="section-tag">&lt;contact&gt;</span>
                 <h2 class="section-title">Let's Connect</h2>
                 <div class="section-line"></div>
             </div>
             <div class="contact-grid">
-                <div class="contact-terminal">
+                <div class="contact-terminal animate-on-scroll slide-left">
                     <div class="terminal-header">
                         <div class="terminal-dots">
                             <span class="dot dot-red"></span>
@@ -471,7 +498,7 @@
                         </div>
                         <span class="terminal-title">contact@harinder:~</span>
                     </div>
-                    <div class="terminal-body">
+                    <div class="terminal-body" id="contactTerminalBody" aria-live="polite">
                         <p><span class="prompt">$</span> <span class="cmd">echo $STATUS</span></p>
                         <p class="output"><span class="text-green">● Open for opportunities</span></p>
                         <p><span class="prompt">$</span> <span class="cmd">cat contact_info.json</span></p>
@@ -485,7 +512,7 @@
 }</pre>
                     </div>
                 </div>
-                <div class="contact-info-side">
+                <div class="contact-info-side animate-on-scroll slide-right">
                     <h3>Ready to collaborate?</h3>
                     <p>Whether it's a security assessment, a project, or just a conversation about cybersecurity — I'm always open to connect.</p>
                     <div class="contact-socials">
@@ -509,6 +536,11 @@
     </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        if (typeof THREE === 'undefined') {
+            document.write('<script src="https://unpkg.com/three@0.128.0/build/three.min.js"><\/script>');
+        }
+    </script>
     <script src="script.js"></script>
     <script src="three-animations.js"></script>
 </body>

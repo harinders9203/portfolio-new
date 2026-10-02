@@ -142,8 +142,8 @@
         });
     }, observerOptions);
 
-    // Observe all animate-on-scroll elements
-    document.querySelectorAll('.animate-on-scroll').forEach(function (el) {
+    // Observe all animate-on-scroll and section-header elements
+    document.querySelectorAll('.animate-on-scroll, .section-header').forEach(function (el) {
         observer.observe(el);
     });
 
@@ -314,6 +314,123 @@
         }
     }());
 
+    // ===== CONTACT TERMINAL TYPEWRITER =====
+    // Types out the contact commands and JSON payload when scrolled into view
+    (function initContactTerminal() {
+        const terminalBody = document.getElementById('contactTerminalBody');
+        const contactSection = document.getElementById('contact');
+        if (!terminalBody || !contactSection) return;
+
+        const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+        const commandDelay = reducedMotionQuery.matches ? 0 : 36;
+        const lineDelay = reducedMotionQuery.matches ? 0 : 160;
+
+        let hasPlayed = false;
+
+        function wait(ms) {
+            return new Promise(function (resolve) {
+                window.setTimeout(resolve, ms);
+            });
+        }
+
+        function typeText(target, text, delay) {
+            return new Promise(function (resolve) {
+                let index = 0;
+                function nextCharacter() {
+                    target.textContent = text.slice(0, index);
+                    if (index >= text.length) {
+                        resolve(true);
+                        return;
+                    }
+                    index += 1;
+                    window.setTimeout(nextCharacter, delay);
+                }
+                nextCharacter();
+            });
+        }
+
+        async function playContactTyping() {
+            if (hasPlayed) return;
+            hasPlayed = true;
+
+            terminalBody.innerHTML = '';
+
+            // Command 1: $ echo $STATUS
+            const prompt1 = document.createElement('p');
+            prompt1.innerHTML = '<span class="prompt">$</span> <span class="cmd"></span>';
+            terminalBody.appendChild(prompt1);
+            await typeText(prompt1.querySelector('.cmd'), 'echo $STATUS', commandDelay);
+            await wait(lineDelay);
+
+            // Output 1: ● Open for opportunities
+            const out1 = document.createElement('p');
+            out1.className = 'output';
+            out1.innerHTML = '<span class="text-green">● Open for opportunities</span>';
+            terminalBody.appendChild(out1);
+            await wait(lineDelay + 100);
+
+            // Command 2: $ cat contact_info.json
+            const prompt2 = document.createElement('p');
+            prompt2.innerHTML = '<span class="prompt">$</span> <span class="cmd"></span>';
+            terminalBody.appendChild(prompt2);
+            await typeText(prompt2.querySelector('.cmd'), 'cat contact_info.json', commandDelay);
+            await wait(lineDelay);
+
+            // Output 2: JSON payload streaming line-by-line
+            const jsonLines = [
+                '{\n',
+                '  <span class="json-key">"name"</span>: <span class="json-val">"Harinder Singh"</span>,\n',
+                '  <span class="json-key">"role"</span>: <span class="json-val">"Purple Team Engineer"</span>,\n',
+                '  <span class="json-key">"email"</span>: <span class="json-val">"singhharinder662@gmail.com"</span>,\n',
+                '  <span class="json-key">"phone"</span>: <span class="json-val">"+91-8360429812"</span>,\n',
+                '  <span class="json-key">"location"</span>: <span class="json-val">"Ludhiana, Punjab, India"</span>,\n',
+                '  <span class="json-key">"hire_me"</span>: <span class="json-bool">true</span>\n',
+                '}'
+            ];
+
+            const preBlock = document.createElement('pre');
+            preBlock.className = 'output json-block';
+            terminalBody.appendChild(preBlock);
+
+            for (let i = 0; i < jsonLines.length; i++) {
+                preBlock.innerHTML += jsonLines[i];
+                if (!reducedMotionQuery.matches) {
+                    await wait(50);
+                }
+            }
+            await wait(lineDelay);
+
+            // Final prompt with blinking cursor
+            const finalPrompt = document.createElement('p');
+            finalPrompt.innerHTML = '<span class="prompt">$</span> <span class="cursor-blink">_</span>';
+            terminalBody.appendChild(finalPrompt);
+        }
+
+        const contactObserver = new IntersectionObserver(function (entries) {
+            if (entries[0].isIntersecting) {
+                playContactTyping();
+            }
+        }, { threshold: 0.2 });
+
+        contactObserver.observe(contactSection);
+
+        if (!('IntersectionObserver' in window)) {
+            playContactTyping();
+        }
+    }());
+
+    // ===== SCROLL PROGRESS BAR =====
+    const scrollBar = document.getElementById('scrollProgressBar');
+    function updateScrollProgress() {
+        if (!scrollBar) return;
+        const scrollTop = window.scrollY || document.documentElement.scrollTop;
+        const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        scrollBar.style.width = scrolled + '%';
+    }
+    window.addEventListener('scroll', updateScrollProgress, { passive: true });
+    updateScrollProgress();
+
     // ===== SKILL BARS ON SCROLL =====
     window.addEventListener('scroll', animateSkillBars);
     // Initial check
@@ -357,7 +474,7 @@
 
     // Add active link style
     const style = document.createElement('style');
-    style.textContent = '.nav-links a.active-link { color: var(--neon-purple) !important; background: var(--purple-soft) !important; }';
+    style.textContent = '.nav-links a.active-link { color: var(--violet-accent) !important; background: var(--violet-soft) !important; }';
     document.head.appendChild(style);
 
     // ===== PRELOAD COMPLETE =====
