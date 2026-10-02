@@ -159,6 +159,161 @@
         heroObserver.observe(heroSection);
     }
 
+    // ===== ABOUT TERMINAL TYPEWRITER =====
+    // The terminal replays from the first command whenever the section is viewed.
+    (function initAboutTerminal() {
+        const terminalBody = document.getElementById('aboutTerminalBody');
+        const aboutSection = document.getElementById('about');
+        if (!terminalBody || !aboutSection) return;
+
+        const sourceLines = Array.from(terminalBody.children).map(function (line) {
+            return line.cloneNode(true);
+        });
+        const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+        const typeDelay = reducedMotionQuery.matches ? 0 : 24;
+        const commandDelay = reducedMotionQuery.matches ? 0 : 45;
+        const lineDelay = reducedMotionQuery.matches ? 0 : 280;
+        const restartDelay = 5 * 60 * 1000;
+
+        let isVisible = false;
+        let runId = 0;
+        let restartTimer = null;
+
+        function wait(ms, currentRun) {
+            return new Promise(function (resolve) {
+                window.setTimeout(function () {
+                    resolve(currentRun === runId && isVisible);
+                }, ms);
+            });
+        }
+
+        function typeText(target, text, delay, currentRun) {
+            return new Promise(function (resolve) {
+                let index = 0;
+
+                function nextCharacter() {
+                    if (currentRun !== runId || !isVisible) {
+                        resolve(false);
+                        return;
+                    }
+                    target.textContent = text.slice(0, index);
+                    if (index >= text.length) {
+                        resolve(true);
+                        return;
+                    }
+                    index += 1;
+                    window.setTimeout(nextCharacter, delay);
+                }
+
+                nextCharacter();
+            });
+        }
+
+        function createPrompt(command) {
+            const line = document.createElement('p');
+            line.innerHTML = '<span class="prompt">$</span> <span class="cmd"></span>';
+            const commandTarget = line.querySelector('.cmd');
+            commandTarget.setAttribute('aria-label', command);
+            return { line: line, target: commandTarget };
+        }
+
+        function createOutput() {
+            const line = document.createElement('p');
+            line.className = 'output';
+            const target = document.createElement('span');
+            line.appendChild(target);
+            return { line: line, target: target };
+        }
+
+        function createFinalPrompt() {
+            const line = document.createElement('p');
+            line.innerHTML = '<span class="prompt">$</span> <span class="cursor-blink">_</span>';
+            return line;
+        }
+
+        function getCommand(line) {
+            const command = line.querySelector('.cmd');
+            return command ? command.textContent.trim() : '';
+        }
+
+        async function playCycle(currentRun) {
+            terminalBody.innerHTML = '';
+
+            for (let lineIndex = 0; lineIndex < sourceLines.length - 1; lineIndex += 1) {
+                const sourceLine = sourceLines[lineIndex];
+                const command = getCommand(sourceLine);
+
+                if (command) {
+                    const prompt = createPrompt(command);
+                    terminalBody.appendChild(prompt.line);
+                    if (!await typeText(prompt.target, command, commandDelay, currentRun)) return;
+                    if (!await wait(lineDelay, currentRun)) return;
+                    continue;
+                }
+
+                if (sourceLine.classList.contains('output-list')) {
+                    const list = document.createElement('p');
+                    list.className = 'output output-list';
+                    terminalBody.appendChild(list);
+
+                    const rows = sourceLine.querySelectorAll(':scope > span');
+                    for (const row of rows) {
+                        const typedRow = document.createElement('span');
+                        const icon = row.querySelector('i');
+                        if (icon) typedRow.appendChild(icon.cloneNode(true));
+                        const textTarget = document.createElement('span');
+                        typedRow.appendChild(textTarget);
+                        list.appendChild(typedRow);
+                        const rowText = row.textContent.trim();
+                        if (!await typeText(textTarget, rowText, typeDelay, currentRun)) return;
+                        if (!await wait(lineDelay, currentRun)) return;
+                    }
+                    continue;
+                }
+
+                if (sourceLine.classList.contains('output')) {
+                    const output = createOutput();
+                    terminalBody.appendChild(output.line);
+                    if (!await typeText(output.target, sourceLine.textContent.trim(), typeDelay, currentRun)) return;
+                    if (!await wait(lineDelay, currentRun)) return;
+                }
+            }
+
+            if (currentRun !== runId || !isVisible) return;
+            terminalBody.appendChild(createFinalPrompt());
+            restartTimer = window.setTimeout(function () {
+                if (isVisible) startCycle();
+            }, restartDelay);
+        }
+
+        function startCycle() {
+            window.clearTimeout(restartTimer);
+            runId += 1;
+            playCycle(runId);
+        }
+
+        function stopCycle() {
+            window.clearTimeout(restartTimer);
+            runId += 1;
+            terminalBody.innerHTML = '';
+        }
+
+        const terminalObserver = new IntersectionObserver(function (entries) {
+            const nowVisible = entries[0].isIntersecting;
+            if (nowVisible === isVisible) return;
+            isVisible = nowVisible;
+            if (nowVisible) startCycle();
+            else stopCycle();
+        }, { threshold: 0.35 });
+        terminalObserver.observe(aboutSection);
+
+        // Older browsers without IntersectionObserver still get the animation.
+        if (!('IntersectionObserver' in window)) {
+            isVisible = true;
+            startCycle();
+        }
+    }());
+
     // ===== SKILL BARS ON SCROLL =====
     window.addEventListener('scroll', animateSkillBars);
     // Initial check

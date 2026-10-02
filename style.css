@@ -761,6 +761,10 @@ img {
     gap: 8px;
 }
 
+.output-list span > span {
+    display: inline;
+}
+
 .output-list i {
     width: 16px;
     font-size: 12px;
